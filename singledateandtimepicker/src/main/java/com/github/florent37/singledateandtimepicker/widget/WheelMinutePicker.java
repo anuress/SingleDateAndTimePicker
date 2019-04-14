@@ -54,11 +54,17 @@ public class WheelMinutePicker extends WheelPicker<String> {
         for (int i = 0; i < itemCount; ++i) {
             final String object = adapter.getItemText(i);
             final Integer value = Integer.valueOf(object);
+
+            if (minute == value) {
+                return i;
+            }
+
             if (minute < value) {
                 return i - 1;
             }
         }
-        return 0;
+        return itemCount - 1;
+
     }
 
     @Override

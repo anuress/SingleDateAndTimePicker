@@ -18,12 +18,9 @@ new SingleDateAndTimePickerDialog.Builder(context)
             //.bottomSheet()
             //.curved()
             //.minutesStep(15)
-            
             //.displayHours(false)
             //.displayMinutes(false)
-
             //.todayText("aujourd'hui")
-            
             .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
                                 @Override
                                 public void onDisplayed(SingleDateAndTimePicker picker) {
@@ -66,7 +63,6 @@ new DoubleDateAndTimePickerDialog.Builder(context)
 
 ```java
 new SingleDateAndTimePickerDialog.Builder(this)
-
             .bottomSheet()
             .curved()
             .displayMinutes(false)
@@ -88,7 +84,6 @@ new SingleDateAndTimePickerDialog.Builder(this)
         android:layout_height="230dp"
         app:picker_curved="true"
         app:picker_cyclic="true"
-        app:picker_canBeOnPast="false"
         app:picker_visibleItemCount="7"
         />
 ```
@@ -116,9 +111,7 @@ new DoubleDateAndTimePickerDialog.Builder(context)
 You can change the minutes steps (default : 5min)
 ```java
 new SingleDateAndTimePickerDialog.Builder(context)
-
             .minutesStep(15)
-
             .display();
 ```
 
@@ -128,11 +121,9 @@ And change some colors
 
 ```java
 new SingleDateAndTimePickerDialog.Builder(context)
-
             .backgroundColor(Color.BLACK)
             .mainColor(Color.GREEN)
             .titleColor(Color.WHITE)
-
             .display();
 ```
 
@@ -142,11 +133,9 @@ Force user to select a date between a range
 
 ```java
 new SingleDateAndTimePickerDialog.Builder(context)
-
             .defaultDate(defaultDate)
             .minDateRange(minDate)
             .maxDateRange(maxDate)
-
             .display();
 ```
 
@@ -154,9 +143,7 @@ Or simply force user to select a future date
 
 ```java
 new SingleDateAndTimePickerDialog.Builder(context)
-
             .mustBeOnFuture()
-
             .display();
 ```
 
@@ -175,6 +162,7 @@ Author: Florent Champigny [http://www.florentchampigny.com/](http://www.florentc
 
 Blog : [http://www.tutos-android-france.com/](http://www.tutos-android-france.com/)
 
+Fiches Plateau Moto : [https://www.fiches-plateau-moto.fr/](https://www.fiches-plateau-moto.fr/)
 
 <a href="https://goo.gl/WXW8Dc">
   <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />

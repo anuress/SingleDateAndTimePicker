@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.github.florent37.singledateandtimepicker.DateHelper.getCalendarOfDate;
 
@@ -83,7 +84,6 @@ public class SingleDateAndTimePicker extends LinearLayout {
     private boolean displayHours = true;
 
     private boolean isAmPm;
-    private int selectorHeight;
 
     public SingleDateAndTimePicker(Context context) {
         this(context, null);
@@ -101,13 +101,13 @@ public class SingleDateAndTimePicker extends LinearLayout {
 
         inflate(context, R.layout.single_day_picker, this);
 
-        yearsPicker = (WheelYearPicker) findViewById(R.id.yearPicker);
-        monthPicker = (WheelMonthPicker) findViewById(R.id.monthPicker);
-        daysOfMonthPicker = (WheelDayOfMonthPicker) findViewById(R.id.daysOfMonthPicker);
-        daysPicker = (WheelDayPicker) findViewById(R.id.daysPicker);
-        minutesPicker = (WheelMinutePicker) findViewById(R.id.minutesPicker);
-        hoursPicker = (WheelHourPicker) findViewById(R.id.hoursPicker);
-        amPmPicker = (WheelAmPmPicker) findViewById(R.id.amPmPicker);
+        yearsPicker = findViewById(R.id.yearPicker);
+        monthPicker = findViewById(R.id.monthPicker);
+        daysOfMonthPicker = findViewById(R.id.daysOfMonthPicker);
+        daysPicker = findViewById(R.id.daysPicker);
+        minutesPicker = findViewById(R.id.minutesPicker);
+        hoursPicker = findViewById(R.id.hoursPicker);
+        amPmPicker = findViewById(R.id.amPmPicker);
         dtSelector = findViewById(R.id.dtSelector);
 
         pickers.addAll(Arrays.asList(
@@ -132,6 +132,10 @@ public class SingleDateAndTimePicker extends LinearLayout {
             public void onYearSelected(WheelYearPicker picker, int position, int year) {
                 updateListener();
                 checkMinMaxDate(picker);
+
+                if (displayDaysOfMonth) {
+                    updateDaysOfMonth();
+                }
             }
         });
 
@@ -330,14 +334,14 @@ public class SingleDateAndTimePicker extends LinearLayout {
         hoursPicker.setIsAmPm(isAmPm);
     }
 
+    public boolean isAmPm() {
+        return isAmPm;
+    }
+
     public void setDayFormatter(SimpleDateFormat simpleDateFormat) {
         if (simpleDateFormat != null) {
             this.daysPicker.setDayFormatter(simpleDateFormat);
         }
-    }
-
-    public boolean isAmPm() {
-        return isAmPm;
     }
 
     public Date getMinDate() {
@@ -356,6 +360,13 @@ public class SingleDateAndTimePicker extends LinearLayout {
     public void setMaxDate(Date maxDate) {
         this.maxDate = maxDate;
         setMinYear();
+    }
+
+    public void setCustomLocale(Locale locale) {
+        for (WheelPicker p : pickers) {
+            p.setCustomLocale(locale);
+            p.updateAdapter();
+        }
     }
 
     private void checkMinMaxDate(final WheelPicker picker) {
@@ -433,7 +444,12 @@ public class SingleDateAndTimePicker extends LinearLayout {
             }
 
             if (displayDaysOfMonth) {
-                calendar.set(Calendar.DAY_OF_MONTH, daysOfMonthPicker.getCurrentDay() + 1);
+                int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                if (daysOfMonthPicker.getCurrentDay() >= daysInMonth) {
+                    calendar.set(Calendar.DAY_OF_MONTH, daysInMonth);
+                } else {
+                    calendar.set(Calendar.DAY_OF_MONTH, daysOfMonthPicker.getCurrentDay() + 1);
+                }
             }
         }
 
@@ -454,6 +470,8 @@ public class SingleDateAndTimePicker extends LinearLayout {
     public void setDefaultDate(Date date) {
         if (date != null) {
             this.defaultDate = date;
+            
+            updateDaysOfMonth();
 
             for (WheelPicker picker : pickers) {
                 picker.setDefaultDate(defaultDate);
@@ -489,6 +507,10 @@ public class SingleDateAndTimePicker extends LinearLayout {
         final Date date = getDate();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
+        updateDaysOfMonth(calendar);
+    }
+
+    private void updateDaysOfMonth(@NonNull Calendar calendar) {
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         daysOfMonthPicker.setDaysInMonth(daysInMonth);
         daysOfMonthPicker.updateAdapter();
@@ -551,7 +573,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
         a.recycle();
 
         if (displayDaysOfMonth) {
-            updateDaysOfMonth();
+            updateDaysOfMonth(Calendar.getInstance());
         }
     }
 
